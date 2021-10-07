@@ -9,6 +9,12 @@ from functools import wraps
 import streamlit.components.v1 as component
 from pandas_profiling import ProfileReport
 
+
+def get_dom(dt):
+  return dt.day
+
+def get_weekday(dt):
+  return dt.weekday()
 #---------------------------------------------------------------
 
 #Fonction pour relever le temps d'execution d'une fonction
@@ -19,7 +25,7 @@ def timer_func(func):
         t1 = time.time()
         result = func(*args, **kwargs)
         t2 = time.time()
-        f = open("./log_exec.txt",'a',encoding="utf8")
+        f = open("D:/Karim/Projets/dashboard_karim_abed/log_exec.txt",'a',encoding="utf8")
         mes=f'Function {func.__name__!r} executed in {(t2-t1):.4f}s'
         f.write(mes+" "+"\n")
         f.close()
@@ -28,21 +34,37 @@ def timer_func(func):
 #---------------------------------------------------------------
 @timer_func
 @st.cache(suppress_st_warning=True,allow_output_mutation=True)
-def read(file_path):
-    return pd.read_csv(file_path,low_memory=False)
+def read_and_transform(file_path):
+    data=pd.read_csv(file_path,low_memory=False,parse_dates=["date_mutation"])
+    data['dom']=data['date_mutation'].map(get_dom)
+    data['weekday']=data['date_mutation'].map(get_weekday)
+    pd.to_numeric(data['dom'])
+    data=data.fillna(0)
+    return data
 
-data=read("./full_2020.csv")
+data=read_and_transform("D:/Karim/Projets/dashboard_karim_abed/full_2020.csv")
 #---------------------------------------------------------------
+@timer_func
+@st.cache()
+def change_type_str(nom_col):
+    data[nom_col] = data[nom_col].astype(str)
+    return data
 
+change_type_str("type_local")
+change_type_str("code_nature_culture")
+change_type_str("nature_culture")
+
+@timer_func
+@st.cache()
 def trans_type(num_col,type):
     return data[num_col].astype(type)
 
 @timer_func
 def titre(titre):
     return st.title(titre)
-
-print(data.isnull().sum())
+print(type(data["adresse_nom_voie"]))
+#print(data.isnull().sum())
  
 titre("test")
-st.write(data.head())
-st.write(data.head(2000))
+st.write(data.head(10))
+st.write(data.info())
