@@ -44,3 +44,8 @@ Function 'change_type_str' executed in 0.2760s
 Function 'change_type_str' executed in 0.1320s 
 Function 'change_type_str' executed in 0.1110s 
 Function 'titre' executed in 0.0000s 
+Function 'read_and_transform' executed in 2.9131s 
+Function 'change_type_str' executed in 0.3030s 
+Function 'change_type_str' executed in 0.1300s 
+Function 'change_type_str' executed in 0.0900s 
+Function 'titre' executed in 0.0010s 
