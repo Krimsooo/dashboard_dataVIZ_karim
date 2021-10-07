@@ -19,7 +19,7 @@ def timer_func(func):
         t1 = time.time()
         result = func(*args, **kwargs)
         t2 = time.time()
-        f = open("D:/Karim/Projets/projet_data_viz_karim_abed/log_exec.txt",'a',encoding="utf8")
+        f = open("D:/Karim/Projets/dashboard_karim_abed/log_exec.txt",'a',encoding="utf8")
         mes=f'Function {func.__name__!r} executed in {(t2-t1):.4f}s'
         f.write(mes+" "+"\n")
         f.close()
@@ -31,7 +31,7 @@ def timer_func(func):
 def read(file_path):
     return pd.read_csv(file_path,low_memory=False)
 
-data=read("D:/Karim/Projets/projet_data_viz_karim_abed/full_2020_.csv")
+data=read("D:/Karim/Projets/dashboard_karim_abed/full_2020.csv")
 #---------------------------------------------------------------
 
 def trans_type(num_col,type):

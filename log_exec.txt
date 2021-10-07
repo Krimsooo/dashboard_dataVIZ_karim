@@ -106,3 +106,5 @@ Function 'read' executed in 0.0030s
 Function 'titre' executed in 0.0000s 
 Function 'read' executed in 0.5973s 
 Function 'titre' executed in 0.0010s 
+Function 'read' executed in 0.6328s 
+Function 'titre' executed in 0.0000s 
