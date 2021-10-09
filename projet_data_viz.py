@@ -8,7 +8,7 @@ import time
 from functools import wraps
 import streamlit.components.v1 as component
 from pandas_profiling import ProfileReport
-from numpy import int16
+from numpy import datetime64, int16
 from numpy import int32
 
 
@@ -27,7 +27,7 @@ def timer_func(func):
         t1 = time.time()
         result = func(*args, **kwargs)
         t2 = time.time()
-        f = open("./log_exec.txt",'a',encoding="utf8")
+        f = open("D:/Karim/Projets/dashboard_dataVIZ_karim/log_exec.txt",'a',encoding="utf8")
         mes=f'Function {func.__name__!r} executed in {(t2-t1):.4f}s'
         f.write(mes+" "+"\n")
         f.close()
@@ -37,14 +37,14 @@ def timer_func(func):
 @timer_func
 @st.cache(suppress_st_warning=True,allow_output_mutation=True)
 def read_and_transform(file_path):
-    data=pd.read_csv(file_path,low_memory=False,parse_dates=["date_mutation"])
+    data=pd.read_csv(file_path,low_memory=False,sep=",")
+    data=data.fillna(0)
+    data['date_mutation']=pd.to_datetime(data['date_mutation'])
     data['dom']=data['date_mutation'].map(get_dom)
     data['weekday']=data['date_mutation'].map(get_weekday)
-    pd.to_numeric(data['dom'])
-    data=data.fillna(0)
     return data
 
-data=read_and_transform("./full_2020.csv")
+data=read_and_transform("D:/Karim/Projets/dashboard_dataVIZ_karim/full_2020.csv")
 #---------------------------------------------------------------
 @timer_func
 @st.cache(allow_output_mutation=True)
@@ -53,6 +53,7 @@ def change_type(nom_col,type):
     return data
 
 change_type("id_mutation",str)
+
 change_type("code_commune",str)
 change_type("nom_commune",str)
 change_type("code_postal",int32)
@@ -80,7 +81,7 @@ change_type("adresse_nom_voie",str)
 def titre(titre):
     return st.title(titre)
 #print(data.isnull().sum())
- 
+
+print(data.info())
 titre("test")
 st.write(data)
-st.write(data.info())
