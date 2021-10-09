@@ -8,6 +8,8 @@ import time
 from functools import wraps
 import streamlit.components.v1 as component
 from pandas_profiling import ProfileReport
+from numpy import int16
+from numpy import int32
 
 
 def get_dom(dt):
@@ -42,29 +44,43 @@ def read_and_transform(file_path):
     data=data.fillna(0)
     return data
 
-data=read_and_transform("./full_2020.csv")
+data=read_and_transform("D:/Karim/Projets/dashboard_dataVIZ_karim/full_2020.csv")
 #---------------------------------------------------------------
 @timer_func
-@st.cache()
-def change_type_str(nom_col):
-    data[nom_col] = data[nom_col].astype(str)
+@st.cache(allow_output_mutation=True)
+def change_type(nom_col,type):
+    data[nom_col] = data[nom_col].astype(type)
     return data
 
-change_type_str("type_local")
-change_type_str("code_nature_culture")
-change_type_str("nature_culture")
-
-@timer_func
-@st.cache()
-def trans_type(num_col,type):
-    return data[num_col].astype(type)
+change_type("id_mutation",str)
+change_type("code_commune",str)
+change_type("nom_commune",str)
+change_type("code_postal",int32)
+change_type("nature_mutation",str)
+change_type("type_local",str)
+change_type("code_nature_culture",str)
+change_type("nature_culture",str)
+change_type("nature_culture_speciale",str)
+change_type("dom",int16)
+change_type("surface_terrain",int32)
+change_type("surface_reelle_bati",int32)
+change_type("nombre_pieces_principales",int16)
+change_type("numero_disposition",int16)
+change_type("adresse_numero",int16)
+change_type("nombre_lots",int16)
+change_type("code_type_local",int16)
+change_type("weekday",int16)
+change_type("code_departement",str)
+change_type("adresse_code_voie",str)
+change_type("id_parcelle",str)
+change_type("code_nature_culture",str)
+change_type("adresse_nom_voie",str)
 
 @timer_func
 def titre(titre):
     return st.title(titre)
-print(type(data["adresse_nom_voie"]))
 #print(data.isnull().sum())
  
 titre("test")
-st.write(data.head(10))
+st.write(data)
 st.write(data.info())
