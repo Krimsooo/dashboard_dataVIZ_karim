@@ -10,7 +10,7 @@ import streamlit.components.v1 as component
 from pandas_profiling import ProfileReport
 from numpy import datetime64, int16
 from numpy import int32
-
+import os
 
 def get_dom(dt):
   return dt.day
@@ -27,7 +27,7 @@ def timer_func(func):
         t1 = time.time()
         result = func(*args, **kwargs)
         t2 = time.time()
-        f = open("D:/Karim/Projets/dashboard_dataVIZ_karim/log_exec.txt",'a',encoding="utf8")
+        f = open("dashboard_dataVIZ_karim/log_exec.txt",'a',encoding="utf8")
         mes=f'Function {func.__name__!r} executed in {(t2-t1):.4f}s'
         f.write(mes+" "+"\n")
         f.close()
@@ -44,7 +44,7 @@ def read_and_transform(file_path):
     data['weekday']=data['date_mutation'].map(get_weekday)
     return data
 
-data=read_and_transform("D:/Karim/Projets/dashboard_dataVIZ_karim/full_2020.csv")
+data=read_and_transform("dashboard_dataVIZ_karim/full_2020.csv")
 #---------------------------------------------------------------
 @timer_func
 @st.cache(allow_output_mutation=True)
