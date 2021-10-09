@@ -44,7 +44,7 @@ def read_and_transform(file_path):
     data=data.fillna(0)
     return data
 
-data=read_and_transform("D:/Karim/Projets/dashboard_dataVIZ_karim/full_2020.csv")
+data=read_and_transform("./full_2020.csv")
 #---------------------------------------------------------------
 @timer_func
 @st.cache(allow_output_mutation=True)
