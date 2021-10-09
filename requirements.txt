@@ -4,4 +4,3 @@ matplotlib
 seaborn
 plotly_express
 pandas_profiling
-os
