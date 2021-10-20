@@ -11,6 +11,18 @@ from pandas_profiling import ProfileReport
 from numpy import datetime64, int16
 from numpy import int32
 import os
+import pydeck as pdk
+
+st.set_page_config(page_title="Kar'immobilier",
+                   page_icon="🏘️",
+                   layout="wide",
+                   initial_sidebar_state="auto"
+                   )
+
+add_selectbox = st.sidebar.selectbox(
+    "How would you like to be contacted?",
+    ("Email", "Home phone", "Mobile phone")
+)
 
 def get_dom(dt):
   return dt.day
@@ -27,13 +39,14 @@ def timer_func(func):
         t1 = time.time()
         result = func(*args, **kwargs)
         t2 = time.time()
-        f = open("log_exec.txt",'a',encoding="utf8")
+        f = open("D:/Karim/Projets/dashboard_dataVIZ_karim/log_exec.txt",'a',encoding="utf8")
         mes=f'Function {func.__name__!r} executed in {(t2-t1):.4f}s'
         f.write(mes+" "+"\n")
         f.close()
         return result
     return wrap_func
 #---------------------------------------------------------------
+#Fonction de lecture et de modification du dataset
 @timer_func
 @st.cache(suppress_st_warning=True,allow_output_mutation=True)
 def read_and_transform(file_path):
@@ -44,16 +57,17 @@ def read_and_transform(file_path):
     data['weekday']=data['date_mutation'].map(get_weekday)
     return data
 
-data=read_and_transform("full_2020.csv")
+data=read_and_transform("D:/Karim/Projets/dashboard_dataVIZ_karim/full_2020.csv")
 #---------------------------------------------------------------
+#Fonction qui permet de changer le type d'une colonne 
 @timer_func
 @st.cache(allow_output_mutation=True)
 def change_type(nom_col,type):
     data[nom_col] = data[nom_col].astype(type)
     return data
 
+#Changement de type des colonnes du dataset
 change_type("id_mutation",str)
-
 change_type("code_commune",str)
 change_type("nom_commune",str)
 change_type("code_postal",int32)
@@ -77,12 +91,63 @@ change_type("adresse_code_voie",str)
 change_type("id_parcelle",str)
 change_type("code_nature_culture",str)
 change_type("adresse_nom_voie",str)
+change_type("nombre_pieces_principales",int16)
 
 @timer_func
-def titre(titre):
+def aff_titre(titre):
     return st.title(titre)
+
+@timer_func
+def aff_text(text):
+    return st.text(text)
+
+@timer_func
+def aff_write(something):
+    return st.write(something)
+
+def checkbox(text):
+    return st.checkbox(text)
+
+#Commande pour voir le nombre de champs vide/Nan par colonne
 #print(data.isnull().sum())
 
+#Commande pour avoir des infos sur le dataset (type+champs non vides)
 print(data.info())
-titre("test")
-st.write(data)
+print(data.head(5))
+
+#---------------------------------------------------------------
+
+aff_titre("🏢 Kar'immobilier")
+
+aff_text("Les 5 premières lignes dataset 2020")
+aff_write(data.head())
+but1=checkbox("Afficher le dataset 2020 complet")
+        
+if but1:
+    aff_write(data)
+
+
+data_3d=data.sample(73100)
+
+layer = pdk.Layer("GridLayer", 
+                  data_3d,
+                  pickable=True,
+                  extruded=True,
+                  cell_size=10000,
+                  elevation_scale=500,
+                  get_position=["longitude","latitude"],
+                  cellSize=90000
+)
+
+view_state = pdk.ViewState(zoom=4, 
+                           bearing=-25, 
+                           pitch=45,
+                           longitude=2.21,
+                           latitude=46.2322)
+
+
+# Render
+r = pdk.Deck(layers=layer, initial_view_state=view_state)
+
+st.pydeck_chart(r)
+#r.to_html("grid_layer.html")
