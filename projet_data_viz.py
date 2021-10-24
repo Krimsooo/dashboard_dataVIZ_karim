@@ -8,7 +8,7 @@ import time
 from functools import wraps
 import streamlit.components.v1 as component
 from pandas_profiling import ProfileReport
-from numpy import datetime64, int16
+from numpy import datetime64, int16, string_
 from numpy import int32
 import os
 import pydeck as pdk
@@ -39,7 +39,7 @@ def timer_func(func):
         t1 = time.time()
         result = func(*args, **kwargs)
         t2 = time.time()
-        f = open("D:/Karim/Projets/dashboard_dataVIZ_karim/log_exec.txt",'a',encoding="utf8")
+        f = open("log_exec.txt",'a',encoding="utf8")
         mes=f'Function {func.__name__!r} executed in {(t2-t1):.4f}s'
         f.write(mes+" "+"\n")
         f.close()
@@ -57,7 +57,7 @@ def read_and_transform(file_path):
     data['weekday']=data['date_mutation'].map(get_weekday)
     return data
 
-data=read_and_transform("D:/Karim/Projets/dashboard_dataVIZ_karim/full_2020.csv")
+data=read_and_transform("full_2020.csv")
 #---------------------------------------------------------------
 #Fonction qui permet de changer le type d'une colonne 
 @timer_func
@@ -126,9 +126,14 @@ but1=checkbox("Afficher le dataset 2020 complet")
 if but1:
     aff_write(data)
 
+#Fonction pour sampler un dataset
+@st.cache()
+def sample_d(dataset,n):
+    return dataset.sample(n)
 
-data_3d=data.sample(73100)
-
+#------------------------------------------------------------
+#Map 3D représentant tous les biens vendus en 2020
+data_3d=sample_d(data,73000)
 layer = pdk.Layer("GridLayer", 
                   data_3d,
                   pickable=True,
@@ -136,18 +141,15 @@ layer = pdk.Layer("GridLayer",
                   cell_size=10000,
                   elevation_scale=500,
                   get_position=["longitude","latitude"],
-                  cellSize=90000
-)
-
-view_state = pdk.ViewState(zoom=4, 
+                  cellSize=90000)
+view_state = pdk.ViewState(zoom=4.5, 
                            bearing=-25, 
                            pitch=45,
                            longitude=2.21,
                            latitude=46.2322)
-
-
 # Render
 r = pdk.Deck(layers=layer, initial_view_state=view_state)
-
 st.pydeck_chart(r)
+#------------------------------------------------------------
+
 #r.to_html("grid_layer.html")
