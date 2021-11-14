@@ -1,0 +1,6 @@
+Function 'read' executed in 1.2043s 
+Function 'sample_d' executed in 0.3594s 
+Function 'plotterhist' executed in 0.2810s 
+Function 'read' executed in 1.0143s 
+Function 'sample_d' executed in 0.4150s 
+Function 'aff_text' executed in 0.0000s 
