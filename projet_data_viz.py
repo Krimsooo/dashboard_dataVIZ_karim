@@ -19,7 +19,7 @@ st.set_page_config(page_title="Kar'immobilier",
                    initial_sidebar_state="auto"
                    )
 
-st.balloons()
+
 #---------------------------------------------------------------
 #Fonction pour relever le temps d'execution d'une fonction
 @st.cache()
