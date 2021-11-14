@@ -197,7 +197,7 @@ option = st.selectbox('Quelles figures voulez-vous voir ?',
                       ["Fréquence de transaction par jour",
                        "Évolution des valeurs foncières sur un échantillon voulu",
                        "Top n des départements ayant la plus grande surface à vendre",
-                       "Diagramme circulaire représentant la proportion des valeurs foncières moyennes en fonction de la nature de la transaction"])
+                       "Diagramme circulaire représentant la proportion des valeurs foncières moyennes en fonction de la nature du bien"])
 
 #histo
 if option=='Fréquence de transaction par jour':
@@ -250,10 +250,3 @@ if option=="Diagramme circulaire représentant la proportion des valeurs fonciè
     st.plotly_chart(fig, use_container_width=True)
     
 
-#header_1_column, header_2_column,header_3_column,header_4_column,header_5_column,header_6_column = st.columns(6)
-#header_1_column.button("salut")
-#header_2_column.button("sakut")
-#header_3_column.button("ff")
-#header_4_column.button("fff")
-#header_5_column.button("ffff")
-#header_6_column.button("fffff")
